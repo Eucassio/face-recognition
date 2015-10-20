@@ -12,7 +12,7 @@ numFrames = numel(fileNames);
 cont = 1;
 
 % vector with sizes of windows entropy
-blocks = [6];
+blocks = [8];
 [tamx, tamy] = size(blocks);
 numFacesDif = [1,3,10,64];
 [tamxNumFacesDif, tamyNumFacesDif] = size(numFacesDif);
@@ -31,11 +31,11 @@ for a = 1:int64(tamy)
     d1 = 1;
     d2 = 1;
     
-    gaborArray = gaborFilterBank(1,4,9,9);
+    gaborArray = gaborFilterBank(3,5,9,9);
     [u,v] = size(gaborArray);
      [n,m] = size(img);
      s = (n*m)/(d1*d2);
-     l = s/(block_size*block_size);
+     l = u*v*(s/(block_size*block_size))
     
     people_name = '';
     i = 0;
@@ -43,14 +43,14 @@ for a = 1:int64(tamy)
     training_label_vector = zeros(m,1);
     training_instance_matrix = zeros(m,l);
     k = 1;
-
+    [gaborSizeX, gaborSizeY] = size(gaborArray{1,1});
     z = 1;
     imgEquals = 1;
     while(k <= numFrames)
         name = [fileFolder '/' fileNames{k}];
 
             [people_name_tmp, imgIdx] = strtok(fileNames{k},'_');
-            %[people_name_tmp, imgIdx] = strtok(imgIdx,'-');
+            %[people_name_tmp, imgIdx] = strtok(fileNames{k},'-');
             %if(strcmp(imgIdx,'-11.jpg') == 1 || strcmp(imgIdx,'-13.jpg') == 1 || strcmp(imgIdx,'-11 1.jpg') == 1)
                 if(strcmp(people_name,people_name_tmp) == 0)
                     people_name = people_name_tmp;
@@ -65,7 +65,7 @@ for a = 1:int64(tamy)
 
                     %featureVector_h = gaborFeatures2(img, gaborArray,d1,d2,s,l,block_size);
                     %featureVector_h = gaborFeatures(img, gaborArray,d1,d2);
-                    featureVector_h = gaborFeaturesHist(img, gaborArray,d1,d2,block_size,block_size);
+                    featureVector_h = gaborFeaturesHistEntropy(img, gaborArray,d1,d2,block_size,block_size,l);
 
                     training_label_vector(z) = i;
                     training_instance_matrix(z,1:l) = featureVector_h';
@@ -76,7 +76,8 @@ for a = 1:int64(tamy)
             %end
             k = k + 1;            
     end;
-    nameOutput = strcat('hist_', database, '_',int2str(i), '_', int2str(numInd), '_' , int2str(block_size),'x',int2str(block_size),'.txt');
+    
+    nameOutput = strcat('hist_concat_entropia', database, '_',int2str(i), '_', int2str(numInd), '_' , int2str(block_size),'x',int2str(block_size), '_',int2str(u),'x',int2str(v),'_',int2str(gaborSizeX),'x',int2str(gaborSizeY),'.txt');
     disp('Saving ...');
     disp(nameOutput);
     libsvmwrite(nameOutput, training_label_vector, sparse(training_instance_matrix));
