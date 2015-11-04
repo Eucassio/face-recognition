@@ -44,35 +44,26 @@ function gaborArray = gaborFilterBankCurvo(u,v,m,n,c)
 % Create u*v gabor filters each being an m*n matrix
 
 gaborArray = cell(u,v);
-fmax = 1;
-gama = sqrt(2);
-eta = sqrt(2);
+
 
 for i = 1:u
-    
-    fu = fmax/((sqrt(2))^(i-1));
-    alpha = fu/gama;
-    beta = fu/eta;
+ 
+    kv = 2^(-( (i-1) + 2)/2)*pi;
     gama = 2*pi;
+    
     for j = 1:v
-        tetav = ((j-1)/v)*pi;
-        gFilter = zeros(m,n);
-        
-        kv = 2^(-(fu + 2)/2)*pi;
-        fi = tetav*(pi/8);
+
+        gFilter = zeros(m,n);   
+        fi = (j-1)*(pi/8);
         
         for x = 1:m
             for y = 1:n
                 x1 = (x-((m+1)/2));
                 y1 = (y-((n+1)/2));
-                %xprime = x1*cos(tetav)+y1*sin(tetav);
-                %yprime = -x1*sin(tetav)+y1*cos(tetav);
-                %gFilter(x,y) = (fu^2/(pi*gama*eta))*exp(-((alpha^2)*(xprime^2)+(beta^2)*(yprime^2)))*exp(1i*2*pi*fu*xprime);
+ 
+                p1 = -(kv^2)/(2*(gama^2)) * (( x1*cos(fi) + y1*sin(fi) + c*(-x1*sin(fi)+y1*cos(fi))^2)^2 + (-x1*sin(fi)+y1*cos(fi))^2);
                 
-                
-                p1 = -(kv^2)/(2*gama^2) * (( x1*cos(fi) + y1*sin(fi) + c*(-x1*sin(fi)+y*cos(fi))^2)^2 + (-x1*sin(fi)+y*cos(fi))^2);
-                
-                p2 = 1i*kv*( x1*cos(fi) + y*sin(fi) + c*(-x*sin(fi)+ y*cos(fi))^2 ) - exp(-(gama^2)/2);
+                p2 = 1i*kv*( x1*cos(fi) + y1*sin(fi) + c*(-x1*sin(fi)+ y1*cos(fi))^2 ) - exp(-(gama^2)/2);
                 
                 gFilter(x,y) = (kv^2)/(gama^2) * exp(p1) * exp(p2);
                 
@@ -100,12 +91,12 @@ end
 % % Show real parts of Gabor filters:
 figure('NumberTitle','Off','Name','Real parts of Gabor filters Bank');
 for i = 1:u
-    fu = fmax/((sqrt(2))^(i-1));
-    kv = 2^(-(fu + 2)/2)*pi;
+    kv = 2^(-( (i-1) + 2)/2)*pi;
+    
     for j = 1:v        
         subplot(u,v,(i-1)*v+j);   
-        tetav = ((j-1)/v)*pi;
+        fi = (j-1)*(pi/8);
         imshow(real(gaborArray{i,j}),[]);
-        title([ num2str(radtodeg(tetav)) ' - ' num2str(kv) ]);
+        title([ num2str(radtodeg(fi)) ' - ' num2str(kv) ]);
     end
 end
