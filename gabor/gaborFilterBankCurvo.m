@@ -54,7 +54,7 @@ for i = 1:u
     for j = 1:v
 
         gFilter = zeros(m,n);   
-        fi = (j-1)*(pi/8);
+        fi = (j-1)*(pi/4);
         
         for x = 1:m
             for y = 1:n
@@ -95,7 +95,7 @@ for i = 1:u
     
     for j = 1:v        
         subplot(u,v,(i-1)*v+j);   
-        fi = (j-1)*(pi/8);
+        fi = (j-1)*(pi/4);
         imshow(real(gaborArray{i,j}),[]);
         title([ num2str(radtodeg(fi)) ' - ' num2str(kv) ]);
     end
