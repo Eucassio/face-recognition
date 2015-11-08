@@ -1,4 +1,4 @@
-function featureVector = gaborFeaturesHist(img,gaborArray,d1,d2, N, K)
+﻿function featureVector = gaborFeaturesHist(img,gaborArray,d1,d2, N, K)
 
 % GABORFEATURES extracts the Gabor features of the image.
 % It creates a column vector, consisting of the image's Gabor features.
@@ -84,13 +84,13 @@ if(u >1)
                 for j = 1:v
                     % Normaliza��o da orienta��o
                     %norma = norm(G{a,b}(:,j));
-                    G{a,b}(i,j) = G{a,b}(i,j)/norm(G{a,b}(:,j));
+                    G2{a,b}(i,j) = G{a,b}(i,j)/norm(G{a,b}(:,j));
                 end
             end
         end
     end
 end
-
+G = G2;
 
 for a = 1:y % Percorre a c�lula 512x512
     for b = 1:x
