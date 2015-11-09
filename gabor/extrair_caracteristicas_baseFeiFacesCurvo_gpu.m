@@ -32,7 +32,7 @@ for a = 1:int64(tamy)
     d1 = 1;
     d2 = 1;
     
-    gaborArray = gaborFilterBankCurvo(5,16,30,30,0.2);
+    gaborArray = gaborFilterBankCurvo(5,16,30,30,0.1);
     [u,v] = size(gaborArray);
     [n,m] = size(img_h);
     s = (n*m)/(d1*d2);

@@ -15,6 +15,7 @@ cont = 1;
 blocks = [8];
 [tamx, tamy] = size(blocks);
 numFacesDif = [14];
+c = 0.1;
 [tamxNumFacesDif, tamyNumFacesDif] = size(numFacesDif);
 t = 1;
 for a = 1:int64(tamy)
@@ -31,7 +32,7 @@ for a = 1:int64(tamy)
     d1 = 1;
     d2 = 1;
     
-    gaborArray = gaborFilterBankCurvo(5,16,30,30,0.2);
+    gaborArray = gaborFilterBankCurvo(5,16,30,30,c);
     [u,v] = size(gaborArray);
     [n,m] = size(img_h);
     s = (n*m)/(d1*d2);
@@ -48,7 +49,7 @@ for a = 1:int64(tamy)
     z = 1;
     imgEquals = 1;
     [gaborSizeX, gaborSizeY] = size(gaborArray{1,1});
-    
+
     while(k <= numFrames)
         name = [fileFolder '/' fileNames{k}];
 
@@ -80,7 +81,7 @@ for a = 1:int64(tamy)
             %end
             k = k + 1;            
     end;
-    nameOutput = strcat('hist_gabor_curvo_0.2_', database, '_',int2str(i), '_', int2str(numInd), '_' , int2str(block_size),'x',int2str(block_size), '_',int2str(u),'x',int2str(v),'_',int2str(gaborSizeX),'x',int2str(gaborSizeY),'.txt');
+    nameOutput = strcat('hist_gabor_curvo_', int2str(c),'_', database, '_',int2str(i), '_', int2str(numInd), '_' , int2str(block_size),'x',int2str(block_size), '_',int2str(u),'x',int2str(v),'_',int2str(gaborSizeX),'x',int2str(gaborSizeY),'.txt');
     disp('Saving ...');
     disp(nameOutput);
     libsvmwrite(nameOutput, training_label_vector, sparse(training_instance_matrix));
