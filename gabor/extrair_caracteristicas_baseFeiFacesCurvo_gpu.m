@@ -3,8 +3,9 @@
 %%
 
 % image directory
-database  = 'oclusao';
-caminho = ['/home/eucassio/projetos/mestrado/test2_crop/' database];
+%parpool('local',16);
+database  = 'test2_crop';
+caminho = ['E:\facedatabase\' database];
 fileFolder = fullfile(caminho);
 dirOutput = dir(fullfile(fileFolder,'*.jpg'));
 fileNames = {dirOutput.name}';
@@ -23,7 +24,7 @@ for a = 1:int64(tamy)
         
     disp(['Starting ', int2str(a) ,' in ', datestr(now, 'HH:MM:SS')]);
     block_size = blocks(a);
-    name = [fileFolder '/' fileNames{1}];
+    name = [fileFolder '\' fileNames{1}];
     img = imread(name);
     [img_h, img_v] = lvp_lee(img, block_size);
     
@@ -31,14 +32,14 @@ for a = 1:int64(tamy)
     d1 = 1;
     d2 = 1;
     
-    gaborArray = gaborFilterBankCurvo(1z,8,9,9,0.1);
+    gaborArray = gaborFilterBankCurvo(5,16,30,30,0.2);
     [u,v] = size(gaborArray);
     [n,m] = size(img_h);
     s = (n*m)/(d1*d2);
     l = s*u*v;
     
     people_name = '';
-    i = 0;
+    %i = 0;
     m = 10;
     training_label_vector = zeros(m,1);
     training_instance_matrix = zeros(m,l);
@@ -49,36 +50,39 @@ for a = 1:int64(tamy)
 
     [gaborSizeX, gaborSizeY] = size(gaborArray{1,1});
     
-    while(k <= numFrames)
+    %while(k <= numFrames)
+    %parfor
+    parfor k = 1:30    
         name = [fileFolder '/' fileNames{k}];
 
-            [people_name_tmp, imgIdx] = strtok(fileNames{k},'-');
+            [~, imgIdx] = strtok(fileNames{k},'-');
             [people_name_tmp, imgIdx] = strtok(imgIdx,'-');
             %if(strcmp(imgIdx,'-11.jpg') == 1 || strcmp(imgIdx,'-13.jpg') == 1 || strcmp(imgIdx,'-11 1.jpg') == 1)
-                if(strcmp(people_name,people_name_tmp) == 0)
-                    people_name = people_name_tmp;
-                    i = i + 1;
-                    imgEquals = 1;
-                else
-                    imgEquals = imgEquals + 1;
-                end
-                if(imgEquals <= numFacesDiff)
-                    disp([int2str(i) ' - ' int2str(imgEquals) ' - ' name]);
+                %if(strcmp(people_name,people_name_tmp) == 0)
+                %    people_name = people_name_tmp;
+                    %i = i + 1;
+                    %imgEquals = 1;
+                %else
+                    %imgEquals = imgEquals + 1;
+               % end
+                %if(imgEquals <= numFacesDiff)
+                    %disp([int2str(i) ' - ' int2str(imgEquals) ' - ' name]);
+                    disp([' - ' int2str(imgEquals) ' - ' name]);
                     img = imread(name);
 
                     %featureVector_h = gaborFeatures2(img, gaborArray,d1,d2,s,l,block_size);
                     %featureVector_h = gaborFeatures(img, gaborArray,d1,d2);
                     %featureVector_h = gaborFeatures2MaxEntropy(img, gaborArray,d1,d2,s,l,block_size);
-                    featureVector_h = gaborFeaturesHist(img, gaborArray,d1,d2,block_size,block_size);
+                    featureVector_h = gaborFeaturesHistGPU2(img, gaborArray,d1,d2,block_size,block_size);
 
-                    training_label_vector(z) = i;
-                    training_instance_matrix(z,1:l) = featureVector_h';
+                    %training_label_vector(z) = i;
+                    %training_instance_matrix(z,1:l) = featureVector_h';
 
                     z = z + 1;
-                    numInd = imgEquals;
-                end
+                    %numInd = imgEquals;
+                %end
             %end
-            k = k + 1;            
+           % k = k + 1;            
     end;
     nameOutput = strcat('hist_gabor_curvo_', database, '_',int2str(i), '_', int2str(numInd), '_' , int2str(block_size),'x',int2str(block_size), '_',int2str(u),'x',int2str(v),'_',int2str(gaborSizeX),'x',int2str(gaborSizeY),'.txt');
     disp('Saving ...');

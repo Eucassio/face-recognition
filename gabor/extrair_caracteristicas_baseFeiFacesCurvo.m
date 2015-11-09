@@ -4,7 +4,7 @@
 
 % image directory
 database  = 'oclusao';
-caminho = ['/home/eucassio/projetos/mestrado/test2_crop/' database];
+caminho = ['E:\facedatabase\test2_crop\' database];
 fileFolder = fullfile(caminho);
 dirOutput = dir(fullfile(fileFolder,'*.jpg'));
 fileNames = {dirOutput.name}';
@@ -12,7 +12,7 @@ numFrames = numel(fileNames);
 cont = 1;
 
 % vector with sizes of windows entropy
-blocks = [3];
+blocks = [8];
 [tamx, tamy] = size(blocks);
 numFacesDif = [14];
 [tamxNumFacesDif, tamyNumFacesDif] = size(numFacesDif);
@@ -31,11 +31,12 @@ for a = 1:int64(tamy)
     d1 = 1;
     d2 = 1;
     
-    gaborArray = gaborFilterBankCurvo(1,4,9,9,0.1);
+    gaborArray = gaborFilterBankCurvo(5,16,30,30,0.2);
     [u,v] = size(gaborArray);
     [n,m] = size(img_h);
     s = (n*m)/(d1*d2);
-    l = s*u*v*2;
+    %l = s*u*v*2;
+    l = s*u*v;
     
     people_name = '';
     i = 0;
@@ -46,6 +47,8 @@ for a = 1:int64(tamy)
 
     z = 1;
     imgEquals = 1;
+    [gaborSizeX, gaborSizeY] = size(gaborArray{1,1});
+    
     while(k <= numFrames)
         name = [fileFolder '/' fileNames{k}];
 
@@ -63,9 +66,10 @@ for a = 1:int64(tamy)
                     disp([int2str(i) ' - ' int2str(imgEquals) ' - ' name]);
                     img = imread(name);
 
-                    featureVector_h = gaborFeatures2(img, gaborArray,d1,d2,s,l,block_size);
+                    %featureVector_h = gaborFeatures2(img, gaborArray,d1,d2,s,l,block_size);
                     %featureVector_h = gaborFeatures(img, gaborArray,d1,d2);
                     %featureVector_h = gaborFeatures2MaxEntropy(img, gaborArray,d1,d2,s,l,block_size);
+                    featureVector_h = gaborFeaturesHistGPU2(img, gaborArray,d1,d2,block_size,block_size);
 
                     training_label_vector(z) = i;
                     training_instance_matrix(z,1:l) = featureVector_h';
@@ -76,7 +80,7 @@ for a = 1:int64(tamy)
             %end
             k = k + 1;            
     end;
-    nameOutput = strcat('curvo_teste_', database, '_',int2str(i), '_', int2str(numInd), '_' , int2str(block_size),'x',int2str(block_size),'.txt');
+    nameOutput = strcat('hist_gabor_curvo_0.2_', database, '_',int2str(i), '_', int2str(numInd), '_' , int2str(block_size),'x',int2str(block_size), '_',int2str(u),'x',int2str(v),'_',int2str(gaborSizeX),'x',int2str(gaborSizeY),'.txt');
     disp('Saving ...');
     disp(nameOutput);
     libsvmwrite(nameOutput, training_label_vector, sparse(training_instance_matrix));
