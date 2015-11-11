@@ -1,0 +1,49 @@
+%heart%_scale_label = zeros(1400, 1);
+%heart_scale_inst  = zeros(1400, 3600);
+for i = 0: 0
+    fileRead1 = strcat('hist_gabor_curvo_0_Arface_100_14_8x8_5x16_30x30.txt');
+    fileRead2 = strcat('hist_gabor_curvo_0.05_test2_crop_100_14_8x8_5x16_30x30.txt');
+    fileRead3 = strcat('hist_gabor_curvo_0.1_test2_crop_100_14_8x8_5x16_30x30.txt');
+    fileRead4 = strcat('hist_gabor_curvo_0.2_test2_crop_100_14_8x8_5x16_30x30.txt');
+    disp(fileRead1);
+    disp(fileRead2);
+    disp(fileRead3);
+    disp(fileRead4);
+    [heart_scale_label1, heart_scale_inst1] = libsvmread(fileRead1);   
+    [heart_scale_label2, heart_scale_inst2] = libsvmread(fileRead2);   
+    [heart_scale_label3, heart_scale_inst3] = libsvmread(fileRead3);    
+    [heart_scale_label4, heart_scale_inst4] = libsvmread(fileRead4);
+    
+    heart_scale_instreino = [heart_scale_inst1 ; heart_scale_inst2; heart_scale_inst3; heart_scale_inst4];
+    heart_scale_labeltreino = [heart_scale_label1 ; heart_scale_label2; heart_scale_label3; heart_scale_label4];
+    
+    %%
+    fileRead01 = strcat('hist_gabor_curvo_0_oclusao_100_12_8x8_5x16_30x30.txt');
+    fileRead02 = strcat('hist_gabor_curvo_0.05_oclusao_100_12_8x8_5x16_30x30.txt');
+    fileRead03 = strcat('hist_gabor_curvo_0.1_oclusao_100_12_8x8_5x16_30x30.txt');
+    fileRead04 = strcat('hist_gabor_curvo_0.2_oclusao_100_12_8x8_5x16_30x30.txt');
+    
+    disp(fileRead01);
+    disp(fileRead02);
+    disp(fileRead03);
+    disp(fileRead04);
+    [heart_scale_label01, heart_scale_inst01] = libsvmread(fileRead01);
+    [heart_scale_label02, heart_scale_inst02] = libsvmread(fileRead02);
+    [heart_scale_label03, heart_scale_inst03] = libsvmread(fileRead03);
+    [heart_scale_label04, heart_scale_inst04] = libsvmread(fileRead04);
+    heart_scale_insteste = [heart_scale_inst01 ; heart_scale_inst02; heart_scale_inst03; heart_scale_inst04];
+    heart_scale_labelteste = [heart_scale_label01 ; heart_scale_label02; heart_scale_label03; heart_scale_label04];
+    
+    disp('--------------------------------LIDO--------------------------------------');
+  %  
+    %heart_scale_label((i*280)+1 : 280*(i+1),:) = (i*10) + heart_scale_label_temp;
+    %heart_scale_inst((i*280)+1 : 280*(i+1),:) = heart_scale_inst_temp;
+
+    
+end
+    model = svmtrain(heart_scale_labeltreino, heart_scale_instreino);
+    disp('--------------------------------TREINADO--------------------------------------');
+    [predict_label, accuracy, dec_values] = svmpredict(heart_scale_labelteste, heart_scale_insteste, model);
+    disp('--------------------------------PREDITO---------------------------------------');
+    %disp(predict_label);
+    disp('--------------------------------FIM--------------------------------------');
