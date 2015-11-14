@@ -11,11 +11,11 @@
   %heart%_scale_label = zeros(1400, 1);
 %heart_scale_inst  = zeros(1400, 3600);
 for i = 0: 0
-    fileRead = strcat('hist_gabor_curvo_test2_crop_100_14_8x8_1x4_9x9.txt');
+    fileRead = strcat('hist_gabor_curvo_TOTAL_test2_crop_100_14_8x8_5x16_30x30_8500.txt');
     disp(fileRead);
     [heart_scale_label, heart_scale_inst] = libsvmread(fileRead);    
     
-    fileRead2 = strcat('hist_gabor_curvo_oclusao_100_12_8x8_1x4_9x9.txt');
+    fileRead2 = strcat('hist_gabor_curvo_TOTAL_oclusao_100_12_8x8_5x16_30x30_8500.txt');
     disp(fileRead2);
     [heart_scale_label2, heart_scale_inst2] = libsvmread(fileRead2); 
     
