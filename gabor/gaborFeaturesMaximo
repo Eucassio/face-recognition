@@ -1,0 +1,42 @@
+function final = gaborFeaturesMaximo(img,gaborArray)
+
+if (nargin ~= 2)    % Check correct number of arguments
+    error('Use correct number of input arguments!')
+end
+
+if size(img,3) == 3	% % Check if the input image is grayscale
+    img = rgb2gray(img);
+end
+
+img = double(img);
+
+%% Filtering
+
+% Filter input image by each Gabor filter
+[m,n] = size(img);
+[u,v] = size(gaborArray);
+gaborResult = cell(u,v);
+for i = 1:u
+    for j = 1:v
+        gaborResult{i,j} = conv2(img,gaborArray{i,j},'same');
+    end
+end
+%%
+% % Cálculo do máximo
+for i = 1: u
+    for j = 1: v
+    gabor1 = abs(gaborResult{i, j});
+    gabor2 = gabor1(:);
+    G(:,j) = gabor2(:,1);
+    end
+end
+%%
+[w, y] = size(G);
+for i = 1:w
+    for j = 1:y  
+        array = G(i,:);
+        final(i, 1) = max(array);
+    end
+end
+final = final';
+final = reshape(final,[m, n]);
