@@ -14,8 +14,8 @@ cont = 1;
 % vector with sizes of windows entropy
 blocks = [8];
 [tamx, tamy] = size(blocks);
-numFacesDif = [14];
-c = [0];
+numFacesDif = [10];
+c = [ 0, 0.05, 0.1, 0.2];
 [tamxNumFacesDif, tamyNumFacesDif] = size(numFacesDif);
 t = 1;
 for id = 1:size(c,2)
@@ -33,12 +33,17 @@ for id = 1:size(c,2)
             d1 = 1;
             d2 = 1;
             disp(c(id));
-            gaborArray = gaborFilterBankCurvo(5,8,30,30,c(id));
+            if(c(id) == 0)
+                gaborArray = gaborFilterBankCurvo(5,8,30,30,c(id));
+            else
+                gaborArray = gaborFilterBankCurvo(5,16,30,30,c(id));
+            end
             [u,v] = size(gaborArray);
             [n,m] = size(img);
             s = (n*m)/(d1*d2);
             %l = s*u*v*2;
-            l = 4500;
+             l = u*v*(s/(block_size*block_size));
+            %l = 4500;
             
             people_name = '';
             i = 0;
@@ -54,8 +59,8 @@ for id = 1:size(c,2)
             while(k <= numFrames)
                 name = [fileFolder '/' fileNames{k}];
              
-                    [people_name_tmp, imgIdx] = strtok(fileNames{k},'-');
-                    [people_name_tmp, imgIdx] = strtok(imgIdx,'-');
+                    [people_name_tmp, imgIdx] = strtok(fileNames{k},'_');
+                    %[people_name_tmp, imgIdx] = strtok(imgIdx,'-');
                     %if(strcmp(imgIdx,'-11.jpg') == 1 || strcmp(imgIdx,'-13.jpg') == 1 || strcmp(imgIdx,'-11 1.jpg') == 1)
                     if(strcmp(people_name,people_name_tmp) == 0)
                         people_name = people_name_tmp;
@@ -83,7 +88,7 @@ for id = 1:size(c,2)
                 k = k + 1;
                 
             end;
-            nameOutput = strcat('hist_gabor_curvo_PCA5_', num2str(c(id)),'_', database, '_',int2str(i), '_', int2str(numInd), '_' , int2str(block_size),'x',int2str(block_size), '_',int2str(u),'x',int2str(v),'_',int2str(gaborSizeX),'x',int2str(gaborSizeY),'.txt');
+            nameOutput = strcat('hist_gabor_curvo_', num2str(c(id)),'_', database, '_',int2str(i), '_', int2str(numInd), '_' , int2str(block_size),'x',int2str(block_size), '_',int2str(u),'x',int2str(v),'_',int2str(gaborSizeX),'x',int2str(gaborSizeY),'.txt');
             disp('Saving ...');
             disp(nameOutput);
             libsvmwrite(nameOutput, training_label_vector, sparse(training_instance_matrix));
