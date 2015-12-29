@@ -64,8 +64,8 @@ gArray  = cell2mat(gaborResult);
 
 G3 = cell(x,y);
 
- for a = 1:y % Percorre a c�lula 512x512
-        for b = 1:x
+ for a = 1:x % Percorre a c�lula 512x512
+        for b = 1:y
             [coeff,score,latent] = pca(G2{a,b});
             G3{a,b} = score(:,1:4);
         end

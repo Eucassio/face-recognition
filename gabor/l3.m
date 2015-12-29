@@ -1,10 +1,10 @@
 function G2 = l3(G,u,v,x,y)
 if(u >1)
-    G2 = cell(y,x);
-    for a = 1:y % Percorre a cï¿½lula 512x512
-        for b = 1:x
+    G2 = cell(x,y);
+    for a = 1:x % Percorre a c�lula 512x512
+        for b = 1:y
             % recebe um valor de magnitude
-            % Normalizaï¿½ï¿½o da orientaï¿½ï¿½o
+            % Normaliza��o da orienta��o
              norms = sqrt(sum(G{a,b}.^2,1));
              %norms = round(norms,6);
              %norm2 = zeros(u,v);
@@ -16,9 +16,9 @@ if(u >1)
              
              ttt = G{a,b}./norm2;    
              G2{a,b}=ttt;
-%             for i = 1:u % Percorre os valores de escala e orientaï¿½ï¿½o 2x3
+%             for i = 1:u % Percorre os valores de escala e orienta��o 2x3
 %                 for j = 1:v
-%                     % Normalizaï¿½ï¿½o da orientaï¿½ï¿½o
+%                     % Normaliza��o da orienta��o
 %                     %norma = norm(G{a,b}(:,j));
 %                     G5{a,b}(i,j) = G{a,b}(i,j)/round(norm(G{a,b}(:,j)),6);
 %                 end

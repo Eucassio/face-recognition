@@ -1,5 +1,5 @@
 function out = l5(G,N,K)
-[row,col]=size(G);
+[col,row]=size(G);
 % Valores dos blocos
 aa = 1:N:row;
 bb = 1:K:col;

@@ -1,7 +1,7 @@
 function G = l4(G,u,v,x,y)
 g2 = G;
-for a = 1:y % Percorre a c�lula 512x512
-    for b = 1:x
+for a = 1:x % Percorre a c�lula 512x512
+    for b = 1:y
         % recebe um valor de magnitude
         % Normaliza��o da orienta��o
         gGpu = (G{a,b});
