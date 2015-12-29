@@ -1,6 +1,6 @@
 function out1 = l6(out,u,v,row,col,K,N)
 n = 1;
-sum1 = zeros(u,v);
+sum1 = zeros(size(cell2mat(out{1,1}(1,1))));
 c = 0;
 for l = 1:row
     for k = 1:col
@@ -11,7 +11,7 @@ for l = 1:row
                 % Supress�o n�o m�xima da escala
                 if n == (N*K)+1
                     n = 1;
-                    sum1 = zeros(u,v);
+                    sum1 = zeros(size(sum1));
                 end
                 temp = cell2mat(out{l,k}(a,b));
                 sum1 = temp + sum1;
