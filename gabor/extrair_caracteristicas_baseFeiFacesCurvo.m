@@ -68,7 +68,7 @@ for id = 1:size(c,2)
                 
                 [people_name_tmp, imgIdx] = strtok(fileNames{k},'-');
                 [people_name_tmp, imgIdx] = strtok(imgIdx,'-');
-                if(strcmp(imgIdx,'-08.png') == 1 || strcmp(imgIdx,'-21.png') == 1)
+                if(strcmp(imgIdx,'-09.png') == 1 || strcmp(imgIdx,'-10.png') == 1 || strcmp(imgIdx,'-22.png') == 1 || strcmp(imgIdx,'-23.png') == 1)
                     if(strcmp(people_name,people_name_tmp) == 0)
                         people_name = people_name_tmp;
                         i = i + 1;
@@ -99,7 +99,7 @@ for id = 1:size(c,2)
                 k = k + 1;
                 
             end;
-            nameOutput = strcat('Filtro_Curvo_PCA_Histograma_PCA_', num2str(c(id)),'_', database, '_',int2str(i), '_', int2str(numInd), '_' , int2str(block_size),'x',int2str(block_size), '_',int2str(u),'x',int2str(v),'_',int2str(gaborSizeX),'x',int2str(gaborSizeY),'.txt');
+            nameOutput = strcat('filtro_Curvo_PCA_Histograma_PCA_iluminacaiiculos_', num2str(c(id)),'_', database, '_',int2str(i), '_', int2str(numInd), '_' , int2str(block_size),'x',int2str(block_size), '_',int2str(u),'x',int2str(v),'_',int2str(gaborSizeX),'x',int2str(gaborSizeY),'.txt');
             disp('Saving ...');
             disp(nameOutput);
             libsvmwrite(nameOutput, training_label_vector, sparse(training_instance_matrix));

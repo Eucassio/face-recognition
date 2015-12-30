@@ -1,9 +1,9 @@
-dir = 'C:\Users\EUCASSIO\Downloads\eucassiojr-face-recognition-56f4703fc1d7\eucassiojr-face-recognition-56f4703fc1d7\gabor\';
+dir = 'E:\mestrado\face-recognition\gabor\';
 
-fileRead1 = strcat(dir,'hist_gabor_curvo_cachecol_preto_0_oclusao_100_2_8x8_5x8_30x30.txt');
-fileRead2 = strcat(dir,'hist_gabor_curvo_cachecol_preto_0.05_oclusao_100_2_8x8_5x16_30x30.txt');
-fileRead3 = strcat(dir,'hist_gabor_curvo_cachecol_preto_0.1_oclusao_100_2_8x8_5x16_30x30.txt');
-fileRead4 = strcat(dir,'hist_gabor_curvo_cachecol_preto_0.2_oclusao_100_2_8x8_5x16_30x30.txt');
+fileRead1 = strcat(dir,'filtro_Curvo_PCA_Histograma_PCA_iluminacaiiculos_0_ARface_100_4_4x4_5x8_15x15.txt');
+fileRead2 = strcat(dir,'filtro_Curvo_PCA_Histograma_PCA_iluminacaiiculos_0.05_ARface_100_4_4x4_5x16_15x15.txt');
+fileRead3 = strcat(dir,'filtro_Curvo_PCA_Histograma_PCA_iluminacaiiculos_0.1_ARface_100_4_4x4_5x16_15x15.txt');
+fileRead4 = strcat(dir,'filtro_Curvo_PCA_Histograma_PCA_iluminacaiiculos_0.2_ARface_100_4_4x4_5x16_15x15.txt');
 num=1000;
 
 filesTrain = [
@@ -65,7 +65,7 @@ filesTrain = [
 %         
 %     end
 %     
-    name = strcat('hist_gabor_curvo_TOTAL_cachecol_', num2str(i) ,'.txt');
+    name = strcat('hist_gabor_curvo_TOTAL_cacheco2_', num2str(i) ,'.txt');
      libsvmwrite(name, heart_scale_label1, sparse(heart_scale_instreino));
 %     
 %     disp('treinando')
