@@ -3,10 +3,10 @@
 %%
 
 % image directory
-database  = 'yale';
-caminho = ['E:\facedatabase\' database];
+database  = 'ARface';
+caminho = ['E:\facedatabase\AR_warp_zip\' database];
 fileFolder = fullfile(caminho);
-dirOutput = dir(fullfile(fileFolder,'*.pgm'));
+dirOutput = dir(fullfile(fileFolder,'*.png'));
 fileNames = {dirOutput.name}';
 numFrames = numel(fileNames);
 cont = 1;
@@ -38,11 +38,11 @@ for id = 1:size(c,2)
             s = (n*m)/(d1*d2);
             
             if(c(id) == 0)
-                gaborArray = gaborFilterBankCurvo(5,8,7,7,c(id));
+                gaborArray = gaborFilterBankCurvo(5,8,15,15,c(id));
                 [u,v] = size(gaborArray);
                 l = u*v*(s/(block_size*block_size))/2;
             else
-                gaborArray = gaborFilterBankCurvo(5,16,7,7,c(id));
+                gaborArray = gaborFilterBankCurvo(5,16,15,15,c(id));
                 [u,v] = size(gaborArray);
                 l = u*v*(s/(block_size*block_size))/4;
             end
@@ -66,9 +66,9 @@ for id = 1:size(c,2)
             while(k <= numFrames)
                 name = [fileFolder '/' fileNames{k}];
                 
-                [people_name_tmp, imgIdx] = strtok(fileNames{k},'_');
-                %[people_name_tmp, imgIdx] = strtok(imgIdx,'-');
-                %if(strcmp(imgIdx,'-11.jpg') == 1 || strcmp(imgIdx,'-24.jpg') == 1)
+                [people_name_tmp, imgIdx] = strtok(fileNames{k},'-');
+                [people_name_tmp, imgIdx] = strtok(imgIdx,'-');
+                if(strcmp(imgIdx,'-08.png') == 1 || strcmp(imgIdx,'-21.png') == 1)
                     if(strcmp(people_name,people_name_tmp) == 0)
                         people_name = people_name_tmp;
                         i = i + 1;
@@ -95,11 +95,11 @@ for id = 1:size(c,2)
                         z = z + 1;
                         numInd = imgEquals;
                     end
-                %end
+                end
                 k = k + 1;
                 
             end;
-            nameOutput = strcat('hist_gabor_curvo_cachecol_preto_', num2str(c(id)),'_', database, '_',int2str(i), '_', int2str(numInd), '_' , int2str(block_size),'x',int2str(block_size), '_',int2str(u),'x',int2str(v),'_',int2str(gaborSizeX),'x',int2str(gaborSizeY),'.txt');
+            nameOutput = strcat('Filtro_Curvo_PCA_Histograma_PCA_', num2str(c(id)),'_', database, '_',int2str(i), '_', int2str(numInd), '_' , int2str(block_size),'x',int2str(block_size), '_',int2str(u),'x',int2str(v),'_',int2str(gaborSizeX),'x',int2str(gaborSizeY),'.txt');
             disp('Saving ...');
             disp(nameOutput);
             libsvmwrite(nameOutput, training_label_vector, sparse(training_instance_matrix));

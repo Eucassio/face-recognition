@@ -3,7 +3,7 @@ gaborResult = cell(u,v);
 for i = 1:u
     for j = 1:v
         
-        gaborResult{i,j} = (abs(conv2((img),(gaborArray{i,j}),'same')));
+        gaborResult{i,j} = gather(abs(conv2(gpuArray(img),gpuArray(gaborArray{i,j}),'same')));
 
         % chave � cell e parenteses � a matriz naquela posi��o da c�lula
         % Faz a troca
