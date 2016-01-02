@@ -64,16 +64,16 @@ gArray  = cell2mat(gaborResult);
 
 G3 = cell(x,y);
 
- for a = 1:x % Percorre a c�lula 512x512
-        for b = 1:y
-            [coeff,score,latent] = pca(G2{a,b});
-            G3{a,b} = score(:,1:4);
-        end
- end
+%  for a = 1:x % Percorre a c�lula 512x512
+%         for b = 1:y
+%             [coeff,score,latent] = pca(G2{a,b});
+%             G3{a,b} = score(:,1:4);
+%         end
+%  end
 %disp(isequal(G,G2));
 
 %% Feature Extraction
-G = l3(G3,u,v,x,y);
+G = l3(G2,u,v,x,y);
 
 
 %G = arrayfun(@l31,G,u,v,x,y);

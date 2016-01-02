@@ -1,5 +1,5 @@
 for i = 0: 0
-    fileRead = strcat('hist_gabor_curvo_TOTAL_cacheco2_4.txt_final2_1540.txt');
+    fileRead = strcat('hist_gabor_curvo_TOTAL_cacheco2_meiopi_4.txt');
     disp(fileRead);
     [heart_scale_label, heart_scale_inst] = libsvmread(fileRead);    
     disp('--------------------------------LIDO--------------------------------------');

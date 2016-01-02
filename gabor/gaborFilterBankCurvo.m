@@ -89,14 +89,14 @@ end
 % end
 % % 
 % % Show real parts of Gabor filters:
-figure('NumberTitle','Off','Name','Real parts of Gabor filters Bank');
-for i = 1:u
-    kv = 2^(-( (i-1) + 2)/2)*pi;
-    
-    for j = 1:v        
-        subplot(u,v,(i-1)*v+j);   
-        fi = (j-1)*(pi/8);
-        imshow(real(gaborArray{i,j}),[]);
-        title([ num2str(radtodeg(fi)) ' - ' num2str(kv) ]);
-    end
-end
+% figure('NumberTitle','Off','Name','Real parts of Gabor filters Bank');
+% for i = 1:u
+%     kv = 2^(-( (i-1) + 2)/2)*pi;
+%     
+%     for j = 1:v        
+%         subplot(u,v,(i-1)*v+j);   
+%         fi = (j-1)*(pi/8);
+%         imshow(real(gaborArray{i,j}),[]);
+%         title([ num2str(radtodeg(fi)) ' - ' num2str(kv) ]);
+%     end
+% end
