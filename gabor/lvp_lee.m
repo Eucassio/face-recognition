@@ -7,9 +7,11 @@ end
 [m, n] = size(img);
 
 l= floor(m/block_size);
+l2= floor(n/block_size);
 l = l * l;
+l2 = l2 * l2;
 sizeX = m/sqrt(l);
-sizeY = n/sqrt(l);
+sizeY = n/sqrt(l2);
 while( (sizeX - floor(sizeX)) > 0)
     block_size = block_size + 1;
     l= floor(m/block_size);
@@ -18,7 +20,7 @@ while( (sizeX - floor(sizeX)) > 0)
     sizeY = n/sqrt(l);
 end
 numCol = sqrt(l);
-numRow = numCol;
+numRow = sqrt(l2);
  
  %disp(sizeX);
  %disp(numCol);
@@ -79,9 +81,9 @@ end
    
    
    lee_v = zeros([numCol, numRow]);
-for t = 1: numCol
+for t = 1: numRow
     u = zeros([numRow, sizeY]);
-    for o = 1:numRow   
+    for o = 1: numCol
         l1 = (o-1) * sizeX + 1;
         l2 = o * sizeX;
         k1 = (t-1) * sizeY + 1;
@@ -100,7 +102,7 @@ for t = 1: numCol
     %disp(u);
     %disp('-------------------');
 
-    for o = 1:numRow   
+    for o = 1:numCol   
         sumTemp = 0;
         for j = 1:sizeY  
             ej = u(o,j)/sum(u(o,:));            

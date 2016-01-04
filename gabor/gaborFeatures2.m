@@ -81,9 +81,9 @@ for i = 1:u
         gaborAbs = gaborAbs.';
         
         [img_h, img_v] = lvp_lee(gaborAbs,block_size);
-%         figure
-%         subplot(1,2,1), imshow(img_h);
-%         subplot(1,2,2), imshow(img_v);
+%          figure
+%          subplot(1,2,1), imshow(img_h);
+%          subplot(1,2,2), imshow(img_v);
         
         gaborAbs = reshape(img_h,[],1);                
         

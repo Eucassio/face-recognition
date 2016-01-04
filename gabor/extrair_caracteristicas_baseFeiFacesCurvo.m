@@ -3,7 +3,7 @@
 %%
 
 % image directory
-database  = 'BigFeret';
+database  = ['BigFeret', 'Fei'];
 caminho = ['/media/dados/facedatabase/' database];
 fileFolder = fullfile(caminho);
 dirOutput = dir(fullfile(fileFolder,'*.png'));
@@ -12,7 +12,7 @@ numFrames = numel(fileNames);
 cont = 1;
 
 % vector with sizes of windows entropy
-blocks = [4];
+blocks = [8];
 [tamx, tamy] = size(blocks);
 numFacesDif = [100];
 c = [0 0.05 0.1 0.2];
@@ -105,7 +105,7 @@ for id = 1:size(c,2)
                 k = k + 1;
                 
             end;
-            nameOutput = strcat('resultados/filtro_Curvo_histograma_cachecol_iluminacao_2pi_', num2str(c(id)),'_', database, '_',int2str(i), '_', int2str(numInd), '_' , int2str(block_size),'x',int2str(block_size), '_',int2str(u),'x',int2str(v),'_',int2str(gaborSizeX),'x',int2str(gaborSizeY),'.txt');
+            nameOutput = strcat('resultados/filtro_Curvo_histograma_2pi_', database, '_', num2str(c(id)), '_' ,int2str(i), '_', int2str(numInd), '_' , int2str(block_size),'x',int2str(block_size), '_',int2str(u),'x',int2str(v),'_',int2str(gaborSizeX),'x',int2str(gaborSizeY),'.txt');
             disp('Saving ...');
             disp(nameOutput);
             libsvmwrite(nameOutput, training_label_vector, sparse(training_instance_matrix));
