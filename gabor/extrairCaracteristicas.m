@@ -30,20 +30,18 @@ for id = 1:size(c,2)
             d1 = 1;
             d2 = 1;
             disp(c(id));
-            % [img_h, img_v] = lvp_lee(img, block_size);
+            [img_h, img_v] = lvp_lee(img, block_size);
             [n,m] = size(img_h);
-            if(cropImg ~= 0)
-                %[n,m] = size(img);
-                n = cropImg;
-                %img = imcrop(img, [0 0 m n]);
-                %[img_h, img_v] = lvp_lee(img, block_size);
-                %[n,m] = size(img_h);
+            if(cropImg ~= 0)               
+                img = imcrop(img, [0 0 size(img,1) cropImg]);
+                [img_h, img_v] = lvp_lee(img, block_size);
+                [n,m] = size(img_h);
             end
             
             s = (n*m)/(d1*d2);
             
             if(c(id) == 0)
-                gaborArray = gaborFilterBankCurvo(5,8,15,15,c(id));
+                gaborArray = gaborFilterBankCurvo(1,4,15,15,c(id));
                 [u,v] = size(gaborArray);
                 l = u*v*(s/(block_size*block_size));
             else
@@ -88,7 +86,7 @@ for id = 1:size(c,2)
                         img = imread(name);                        
                         if(cropImg ~= 0)
                             %figure, imshow(img)
-                            img = imcrop(img, [0 0 m cropImg]);
+                            img = imcrop(img, [0 0 size(img,1) cropImg]);
                             %figure, imshow(img)
                         end                        
                         
@@ -107,7 +105,7 @@ for id = 1:size(c,2)
                 k = k + 1;
                 
             end;
-            nameOutput = strcat('resultados/filtro_Curvo_histograma_2pi_', database, '_', subSetName, '_', num2str(c(id)), '_' ,int2str(i), '_', int2str(numInd), '_' , int2str(block_size),'x',int2str(block_size), '_',int2str(u),'x',int2str(v),'_',int2str(gaborSizeX),'x',int2str(gaborSizeY),'.txt');
+            nameOutput = strcat('resultados/filtro_gabor_entropia_2pi_', database, '_', subSetName, '_', num2str(c(id)), '_' ,int2str(i), '_', int2str(numInd), '_' , int2str(block_size),'x',int2str(block_size), '_',int2str(u),'x',int2str(v),'_',int2str(gaborSizeX),'x',int2str(gaborSizeY),'_.txt');
             disp('Saving ...');
             disp(nameOutput);
             libsvmwrite(nameOutput, training_label_vector, sparse(training_instance_matrix));

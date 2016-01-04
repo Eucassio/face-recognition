@@ -67,7 +67,7 @@ for t = 1: numRow
             sumTemp = sumTemp + (ei * logEi);
         end
         hrp = -sumTemp;
-
+        
         lee_h(o,t) = hrp;
 
     end

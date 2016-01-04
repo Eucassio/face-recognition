@@ -16,7 +16,13 @@ for p = 1:numFrames
     disp('--------------------------------TREINADO--------------------------------------')
     
     fileID = fopen('concatenado/resultados.txt','a');
-    fprintf(fileID,'%s %8.5f %d\n',fileNames{p}, accuracy ,size(heart_scale_inst,2));
+    
+    rs = regexp(fileNames{p}, '(?<=_).*?(?=_)', 'match');
+    fileInfo = dir(name);
+    
+    fileSize = fileInfo.bytes/1024/1024;
+    
+    fprintf(fileID,'\n%s\t%s\t%8.5f\t%s\t%s\t%8.5f\t%d\t%s\t%s\t%s\t%s\t%s\t%s','Gabor e entropia', rs{11}, accuracy ,rs{4}, rs{7},fileSize, size(heart_scale_inst,2), rs{9}, rs{10}, rs{12}, rs{13});
     fclose(fileID);
 end
 
