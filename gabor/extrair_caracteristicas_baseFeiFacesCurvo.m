@@ -94,7 +94,11 @@ for id = 1:size(c,2)
                         %featureVector_h = gaborFeatures(img, gaborArray,d1,d2);
                         %featureVector_h = gaborFeatures2MaxEntropy(img, gaborArray,d1,d2,s,l,block_size);
                         featureVector_h = gaborFeaturesHistGPU2(img, gaborArray,d1,d2,block_size,block_size);
-                        
+                          %% Max(Curvo) + Histograma
+                        %[tamA,tamB] = size(img);
+                        %Result = gaborMaxCurvo(img);
+                        %featureVector_h = gaborFeaturesHistMax(Result, block_size, block_size, tamA, tamB);
+                    
                         training_label_vector(z) = i;
                         training_instance_matrix(z,1:l) = featureVector_h';
                         
