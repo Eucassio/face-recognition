@@ -17,7 +17,7 @@ X_train, y_train = load_svmlight_file("/home/eucassio/mestrado/face-recognition/
 # svm classification
 clf = svm.SVC(kernel='rbf', gamma=0.000030517578125, C = 8.0)
 
-predicted = cross_validation.cross_val_predict(clf, X_train,y_train, cv=6)
+predicted = cross_validation.cross_val_predict(clf, X_train,y_train, cv=10)
 
 precisaomacro = precision_score(y_train, predicted, average='macro')  
 precisaomicro = precision_score(y_train, predicted, average='micro')  
