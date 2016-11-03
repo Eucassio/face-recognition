@@ -1,5 +1,5 @@
-caminho = '/media/dados/mestrado/face-recognition/gabor/resultados';
-output =  '/media/dados/mestrado/face-recognition/gabor/concatenado/';
+caminho = '/home/eucassio/mestrado/face-recognition/gabor/resultados/';
+output =  '/home/eucassio/mestrado/face-recognition/gabor/concatenado/';
 
 fileFolder = fullfile(caminho);
 dirOutput = dir(fullfile(fileFolder,'*.txt'));
@@ -18,7 +18,7 @@ for p = 1:numFrames
     name = [fileFolder '/' fileNames{p}];
     disp(name);
     [heart_scale_label1, heart_scale_inst1] = libsvmread(name);
-    movefile(name, [fileFolder '/processados/03012016/' fileNames{p}]);
+    movefile(name, [fileFolder '/processados/03072016/' fileNames{p}]);
     
     heart_scale_instreino = horzcat(heart_scale_instreino,heart_scale_inst1);
     if(mod(p,4) == 0)
