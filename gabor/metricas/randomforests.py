@@ -13,7 +13,7 @@ from sklearn.datasets import load_iris
 from sklearn.datasets import load_svmlight_file
 from sklearn.datasets import load_svmlight_file
 from sklearn.datasets import make_classification
-from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import f1_score
 from sklearn.metrics import precision_score
@@ -24,10 +24,10 @@ import numpy as np
 from serial.tools.list_ports_common import numsplit
 
 X1 =0
-path = "/media/eucassio/dados/facedatabase/vetores_extras/wild_recortada_manualmente/"
+path = "/media/eucassio/dados/facedatabase/vetores_extras/wild_recortada_manualmente/random_forest/"
 
 def classificar(files, vetor, y_train, f):
-    crossV = int(re.findall('[0-9]+', files)[-11])
+    crossV = int(re.findall('[0-9]+', files)[-7])
     
     X_train = vetor# svm classification
     
@@ -49,7 +49,7 @@ def classificar(files, vetor, y_train, f):
     recallmicro = recall_score(y_train, predicted, average='micro')
     recallweighted = recall_score(y_train, predicted, average='weighted')
     
-    f = open(path + files[:-4] + "_resultados__.txt", 'wb')
+    f = open(path + files[:-4] + "_resultados__random_sem_dividir.txt", 'wb')
     f.write('tamanho do vetor de caracteristicas: ' + '{}'.format(sizeFeatures) + '\n')
     f.write('precisao    macro: ' + '{}'.format(precisaomacro) + '\n')
     f.write('precisao    micro: ' + '{}'.format(precisaomicro) + '\n')
@@ -72,7 +72,7 @@ def selecao(numFeatures, numSplit):
     #numFeatures = 375
     
     for files in os.listdir(path):    
-        if files.endswith("WILD_22112016_REDIMENSIONADA__0_100_6_4x4_5x8_15x15__concatenado_13_3500_sub_250x14_.txt"):
+        if files.endswith("WILD_22112016_REDIMENSIONADA__0_100_6_4x4_5x8_15x15__concatenado.txt"):
             X1, y1 = load_svmlight_file(path + files)
             X1 = X1.toarray()
             featuresFull = None
@@ -92,7 +92,7 @@ def selecao(numFeatures, numSplit):
                 #print X1.shape
                 
                 # Build a forest and compute the feature importances
-                forest = ExtraTreesClassifier(n_estimators=1000, random_state=0, n_jobs=3)
+                forest = RandomForestClassifier(n_estimators=250, random_state=0, n_jobs=3)
                 
                 forest.fit(X, y)
                 importances = forest.feature_importances_
@@ -134,7 +134,7 @@ def selecao(numFeatures, numSplit):
                          
             #print(featuresFull.shape)
             classificar(files, featuresFull, y1, f)
-            dump_svmlight_file(featuresFull, y, path + files[:-4] +"_" + str(g) +"_" + str(numFeatures*numSplit) + "_sub_"+ str(numFeatures) + "x" + str(numSplit) + "_.txt")
+            dump_svmlight_file(featuresFull, y, path + files[:-4] +"_" + str(g) +"_" + str(numFeatures*numSplit) + "_sub_"+ str(numFeatures) + "x" + str(numSplit) + "_forest.txt")
             # Plot the feature importances of the forest
             #plt.figure()
             #plt.title("Feature importances")
@@ -145,4 +145,4 @@ def selecao(numFeatures, numSplit):
             #plt.show()
 
 #selecao(250,14)
-selecao(400,7)
+selecao(3800,1)

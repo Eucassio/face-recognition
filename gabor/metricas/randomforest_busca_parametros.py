@@ -13,7 +13,7 @@ from sklearn.datasets import load_iris
 from sklearn.datasets import load_svmlight_file
 from sklearn.datasets import load_svmlight_file
 from sklearn.datasets import make_classification
-from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import f1_score
 from sklearn.metrics import precision_score
@@ -21,12 +21,14 @@ from sklearn.metrics import recall_score
 
 import matplotlib.pyplot as plt
 import numpy as np
+from serial.tools.list_ports_common import numsplit
 
 X1 =0
-path = "/media/eucassio/dados/facedatabase/vetores_extras/wild_recortada_manualmente/"
+path = "/media/eucassio/dados/facedatabase/vetores_extras/wild_recortada_manualmente/random_forest/"
+indicesOne = []
 
 def classificar(files, vetor, y_train, f, numFeatures, numsplit):
-    crossV = int(re.findall('[0-9]+', files)[-15])
+    crossV = int(re.findall('[0-9]+', files)[-11])
     
     X_train = vetor# svm classification
     
@@ -48,7 +50,7 @@ def classificar(files, vetor, y_train, f, numFeatures, numsplit):
     #recallmicro = recall_score(y_train, predicted, average='micro')
     #recallweighted = recall_score(y_train, predicted, average='weighted')
     
-    f = open("/media/eucassio/dados/facedatabase/vetores_extras/wild_recortada_manualmente/resultadocomn_estimators500.csv", 'a')
+    f = open("/media/eucassio/dados/facedatabase/vetores_extras/wild_recortada_manualmente/random_forest/resultado_comn_estimators250_sem_dividir_3800.csv", 'a')
     f.write(files + ";" + str(sizeFeatures) + ";" + str(acuracia) + ";" + str(numFeatures) + ";" + str(numsplit) +"\n")
     f.close()
     #f = open(path + files[:-4] + "_resultados.txt", 'wb')
@@ -66,7 +68,7 @@ def classificar(files, vetor, y_train, f, numFeatures, numsplit):
     #numpy.savetxt(f, con, fmt="%s")
     #f.close()
 
-def selecao(numFeatures, numSplit, X1,y1):
+def selecao(numFeatures, numSplit, X1,y1,indicesOne):
     print 'num fetures por bloco ' + str(numFeatures)
     print 'Num blocos '+ str(numSplit)
     
@@ -95,14 +97,16 @@ def selecao(numFeatures, numSplit, X1,y1):
         #print X1.shape
         
         # Build a forest and compute the feature importances
-        forest = ExtraTreesClassifier(n_estimators=500, random_state=0, n_jobs=3)
-        
-        forest.fit(X, y)
-        importances = forest.feature_importances_
-        std = np.std([tree.feature_importances_ for tree in forest.estimators_],
-                     axis=0)
-        indices = np.argsort(importances)[::-1]
-        
+        if(len(indicesOne) == 0 and numSplit == 1):
+            forest = RandomForestClassifier(n_estimators=250, random_state=0, n_jobs=3)        
+            forest.fit(X, y)
+            importances = forest.feature_importances_
+            std = np.std([tree.feature_importances_ for tree in forest.estimators_], axis=0)
+            indices = np.argsort(importances)[::-1]
+            indicesOne = indices
+        else:
+            indices = indicesOne
+            
         # Print the feature ranking
         #print("Feature ranking:")
         
@@ -112,9 +116,9 @@ def selecao(numFeatures, numSplit, X1,y1):
             if(f < numFeatures):
                 indicesFeatures.append(indices[f])
                 #print("%d. feature %d (%f)" % (f + 1, indices[f], importances[indices[f]]))
-                writer= open("/media/eucassio/dados/facedatabase/vetores_extras/wild_recortada_manualmente/features_1000.csv", 'a')
-                writer.write(str(numFeatures) + ";" + str(numSplit) + ";" + str(sizeSplit * g) + ";" + str(sizeSplit*(g+1)) +  ";" + str(indices[f]) + ";" + str(importances[indices[f]]) +"\n")
-                writer.close()
+                #writer= open("/media/eucassio/dados/facedatabase/vetores_extras/wild_recortada_manualmente/random_forest/features_detail_semdividir.csv", 'a')
+                #writer.write(str(numFeatures) + ";" + str(numSplit) + ";" + str(sizeSplit * g) + ";" + str(sizeSplit*(g+1)) +  ";" + str(indices[f]) + ";" + str(importances[indices[f]]) +"\n")
+                #writer.close()
         
         xFeatures = X[:,indicesFeatures]
         #print xFeatures.shape
@@ -137,7 +141,8 @@ def selecao(numFeatures, numSplit, X1,y1):
         #print(featuresFull.shape) 
                  
     #print(featuresFull.shape)
-    classificar('WILD_22112016_REDIMENSIONADA__0_100_6_4x4_5x8_15x15__concatenado_13_3500_sub_250x14__6_2800_sub_400x7_.txt', featuresFull, y1, f, numFeatures, numSplit)
+    classificar('WILD_22112016_REDIMENSIONADA__0_100_6_4x4_5x8_15x15__concatenado_0_3800_sub_3800x1_fore.txt', featuresFull, y1, f, numFeatures, numSplit)
+    return indicesOne
     #dump_svmlight_file(featuresFull, y, path + files[:-4] +"_" + str(g) +"_" + str(numFeatures*numSplit) +"_sub0000.txt")
     # Plot the feature importances of the forest
     #plt.figure()
@@ -151,19 +156,19 @@ def selecao(numFeatures, numSplit, X1,y1):
 
 
 c=0
-X1, y1 = load_svmlight_file(path + 'WILD_22112016_REDIMENSIONADA__0_100_6_4x4_5x8_15x15__concatenado_13_3500_sub_250x14__6_2800_sub_400x7_.txt')
+X1, y1 = load_svmlight_file(path + 'WILD_22112016_REDIMENSIONADA__0_100_6_4x4_5x8_15x15__concatenado_0_3800_sub_3800x1_forest.txt')
 X1 = X1.toarray()
 print X1.shape[1]
 print X1.shape[1]/100
 
-for i in range(2,X1.shape[1]/100):
-    #for i in range(1,2):
+#for i in range(2,X1.shape[1]/100):
+for i in range(1,2):
         if X1.shape[1] % i == 0:
             for j in range (100,(X1.shape[1]/i),50):
-                if( i * j <= 4000 and i * j >= 400):
+                if( i * j <= 10000 and i * j >= 400):
                     c  = c+1
-                    print str(c) + " de 162 : " + str(i) + "," +str(j) + " = " + str(i*j)
-                    selecao(j,i,X1,y1)
+                    print str(c) + " de 193 : " + str(i) + "," +str(j) + " = " + str(i*j)
+                    indicesOne = selecao(j,i,X1,y1,indicesOne)
 print c                
 numFeatures = sys.argv[1]
 numFeatures = int(numFeatures)
