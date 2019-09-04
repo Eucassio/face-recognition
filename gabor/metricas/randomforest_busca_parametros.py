@@ -4,7 +4,7 @@ import os
 import re
 import sys
 
-from sklearn import cross_validation
+from sklearn.model_selection import cross_validate
 from sklearn import metrics
 from sklearn import svm
 from sklearn.cross_validation import train_test_split
@@ -29,14 +29,14 @@ indicesOne = []
 
 def classificar(files, vetor, y_train, f, numFeatures, numsplit):
     crossV = int(re.findall('[0-9]+', files)[-11])
-    
+
     X_train = vetor# svm classification
-    
+
     clf = svm.SVC(kernel='rbf', gamma=0.000030517578125, C=8.0)
     print 'Tam vetor = ' + str(X_train.shape[1])
     print 'Cross = ' + str(crossV)
     sizeFeatures = X_train.shape[1]
-  
+
     predicted = cross_validation.cross_val_predict(clf, X_train, y_train, cv=crossV, n_jobs=3)
     #precisaomacro = precision_score(y_train, predicted, average='macro')
     #precisaomicro = precision_score(y_train, predicted, average='micro')
@@ -49,7 +49,7 @@ def classificar(files, vetor, y_train, f, numFeatures, numsplit):
     #recallmacro = recall_score(y_train, predicted, average='macro')
     #recallmicro = recall_score(y_train, predicted, average='micro')
     #recallweighted = recall_score(y_train, predicted, average='weighted')
-    
+
     f = open("/media/eucassio/dados/facedatabase/vetores_extras/wild_recortada_manualmente/random_forest/resultado_comn_estimators250_sem_dividir_3800.csv", 'a')
     f.write(files + ";" + str(sizeFeatures) + ";" + str(acuracia) + ";" + str(numFeatures) + ";" + str(numsplit) +"\n")
     f.close()
@@ -71,34 +71,34 @@ def classificar(files, vetor, y_train, f, numFeatures, numsplit):
 def selecao(numFeatures, numSplit, X1,y1,indicesOne):
     print 'num fetures por bloco ' + str(numFeatures)
     print 'Num blocos '+ str(numSplit)
-    
+
 
     #numFeatures = 375
-    
-    #for files in os.listdir(path):    
+
+    #for files in os.listdir(path):
         #if files.endswith("hist_gabor_curvo_WILD_TODAS_IMAGENS_CORTADAS_REDIMENSIONADAS_CINZA_0_84_6_4x4_5x16_15x15_concatenado_3_6000_sub_concatenado.txt"):
     featuresFull = None
     #print 'carregando arquivo: ' + files
-    
+
 
     #print 'lido'
     #numSplit = 4
     sizeSplit = X1.shape[1] / numSplit
     sizeSplit=floor(sizeSplit)
     xFeatures = np.array([])
-    
+
     for g in range(numSplit):
         #print ("[%d, %d[" % (sizeSplit * g, sizeSplit*(g+1)))
-     
+
         #y = y1[0:y1.shape[0],(sizeSplit * g):sizeSplit*(g+1)]
         y = y1
         X = X1[0:y1.shape[0],(sizeSplit * g):sizeSplit*(g+1)]
-    
+
         #print X1.shape
-        
+
         # Build a forest and compute the feature importances
         if(len(indicesOne) == 0 and numSplit == 1):
-            forest = RandomForestClassifier(n_estimators=250, random_state=0, n_jobs=3)        
+            forest = RandomForestClassifier(n_estimators=250, random_state=0, n_jobs=3)
             forest.fit(X, y)
             importances = forest.feature_importances_
             std = np.std([tree.feature_importances_ for tree in forest.estimators_], axis=0)
@@ -106,10 +106,10 @@ def selecao(numFeatures, numSplit, X1,y1,indicesOne):
             indicesOne = indices
         else:
             indices = indicesOne
-            
+
         # Print the feature ranking
         #print("Feature ranking:")
-        
+
         i = 0
         indicesFeatures = []
         for f in range(X.shape[1]):
@@ -119,10 +119,10 @@ def selecao(numFeatures, numSplit, X1,y1,indicesOne):
                 #writer= open("/media/eucassio/dados/facedatabase/vetores_extras/wild_recortada_manualmente/random_forest/features_detail_semdividir.csv", 'a')
                 #writer.write(str(numFeatures) + ";" + str(numSplit) + ";" + str(sizeSplit * g) + ";" + str(sizeSplit*(g+1)) +  ";" + str(indices[f]) + ";" + str(importances[indices[f]]) +"\n")
                 #writer.close()
-        
+
         xFeatures = X[:,indicesFeatures]
         #print xFeatures.shape
- 
+
         #if(xFeatures.shape[0] == 0 ):
         #   xFeatures =  xFeaturesTmp
         #else:
@@ -130,16 +130,16 @@ def selecao(numFeatures, numSplit, X1,y1,indicesOne):
         #print(xFeatures.shape)
         #if(featuresFull != None):
         #    print featuresFull.shape
-        #print "----------------"  
-        if(featuresFull == None): 
+        #print "----------------"
+        if(featuresFull == None):
             featuresFull = xFeatures
         else:
             featuresFull = np.hstack((featuresFull,xFeatures))
             #np.concatenate((featuresFull,xFeatures),axis=1)
             #featuresFull.append(xFeatures,axis=1)
 
-        #print(featuresFull.shape) 
-                 
+        #print(featuresFull.shape)
+
     #print(featuresFull.shape)
     classificar('WILD_22112016_REDIMENSIONADA__0_100_6_4x4_5x8_15x15__concatenado_0_3800_sub_3800x1_fore.txt', featuresFull, y1, f, numFeatures, numSplit)
     return indicesOne
@@ -152,7 +152,7 @@ def selecao(numFeatures, numSplit, X1,y1,indicesOne):
     #plt.xticks(range(xFeatures.shape[1]), indices)
     #plt.xlim([-1, xFeatures.shape[1]])
     #plt.show()
-    
+
 
 
 c=0
@@ -169,7 +169,7 @@ for i in range(1,2):
                     c  = c+1
                     print str(c) + " de 193 : " + str(i) + "," +str(j) + " = " + str(i*j)
                     indicesOne = selecao(j,i,X1,y1,indicesOne)
-print c                
+print c
 numFeatures = sys.argv[1]
 numFeatures = int(numFeatures)
 
@@ -177,5 +177,3 @@ numFeatures = int(numFeatures)
 numSplit = sys.argv[2]
 numSplit = int(numSplit)
 #path = sys.argv[2]
-
-      

@@ -1,5 +1,5 @@
-caminho = '/home/eucassio/mestrado/face-recognition/gabor/resultados/';
-output =  '/home/eucassio/mestrado/face-recognition/gabor/concatenado/';
+caminho = '/home/eucassio/desenvolvimento/projetos/pessoal/face-recognition/Results/featuresvector/';
+output =  '/home/eucassio/desenvolvimento/projetos/pessoal/face-recognition/Results/featuresvector/concatenated/';
 
 fileFolder = fullfile(caminho);
 dirOutput = dir(fullfile(fileFolder,'*.txt'));
@@ -18,13 +18,13 @@ for p = 1:numFrames
     name = [fileFolder '/' fileNames{p}];
     disp(name);
     [heart_scale_label1, heart_scale_inst1] = libsvmread(name);
-    movefile(name, [fileFolder '/processados/03072016/' fileNames{p}]);
+    movefile(name, [fileFolder '/processed/03092019/' fileNames{p}]);
     
     heart_scale_instreino = horzcat(heart_scale_instreino,heart_scale_inst1);
     if(mod(p,4) == 0)
-        name = [output fileNames{p}(1:size(fileNames{p},2)-4), '_concatenado.txt'];
+        name = [output fileNames{p}(1:size(fileNames{p},2)-4), '_concatenated.txt'];
         
-        disp(['Concatenando ...' name]);
+        disp(['Concatenating ...' name]);
         libsvmwrite(name, heart_scale_label1, sparse(heart_scale_instreino));        
         
         heart_scale_instreino=[];

@@ -4,10 +4,10 @@ import os
 import re
 import sys
 
-from sklearn import cross_validation
+from sklearn.model_selection import cross_validate
 from sklearn import metrics
 from sklearn import svm
-from sklearn.cross_validation import train_test_split
+from sklearn.model_selection import train_test_split
 from sklearn.datasets import dump_svmlight_file
 from sklearn.datasets import load_iris
 from sklearn.datasets import load_svmlight_file
@@ -21,22 +21,21 @@ from sklearn.metrics import recall_score
 
 import matplotlib.pyplot as plt
 import numpy as np
-from serial.tools.list_ports_common import numsplit
 
 X1 =0
-path = "/media/eucassio/dados/facedatabase/vetores_extras/wild_recortada_manualmente/random_forest/"
+path = "/opt/face-recognition/Results/featuresvector/concatenated/"
 
 def classificar(files, vetor, y_train, f):
     crossV = int(re.findall('[0-9]+', files)[-7])
-    
+    print('Cross ' + str(crossV))
     X_train = vetor# svm classification
-    
+
     clf = svm.SVC(kernel='rbf', gamma=0.000030517578125, C=8.0)
-    print 'Tam vetor = ' + str(X_train.shape[1])
-    print 'Cross = ' + str(crossV)
+    print ('Tam vetor = ' + str(X_train.shape[1]))
+    print ('Cross = ' + str(crossV))
     sizeFeatures = X_train.shape[1]
-  
-    predicted = cross_validation.cross_val_predict(clf, X_train, y_train, cv=crossV, n_jobs=3)
+
+    predicted =cross_validate(clf, X_train, y_train, cv=crossV, n_jobs=3)
     precisaomacro = precision_score(y_train, predicted, average='macro')
     precisaomicro = precision_score(y_train, predicted, average='micro')
     precisaoweighted = precision_score(y_train, predicted, average='weighted')
@@ -48,7 +47,7 @@ def classificar(files, vetor, y_train, f):
     recallmacro = recall_score(y_train, predicted, average='macro')
     recallmicro = recall_score(y_train, predicted, average='micro')
     recallweighted = recall_score(y_train, predicted, average='weighted')
-    
+
     f = open(path + files[:-4] + "_resultados__random_sem_dividir.txt", 'wb')
     f.write('tamanho do vetor de caracteristicas: ' + '{}'.format(sizeFeatures) + '\n')
     f.write('precisao    macro: ' + '{}'.format(precisaomacro) + '\n')
@@ -65,41 +64,41 @@ def classificar(files, vetor, y_train, f):
     f.close()
 
 def selecao(numFeatures, numSplit):
-    print 'num fetures por bloco ' + str(numFeatures)
-    print 'Num blocos '+ str(numSplit)
-    
+    print ('num fetures por bloco ' + str(numFeatures))
+    print ('Num blocos '+ str(numSplit))
+
 
     #numFeatures = 375
-    
-    for files in os.listdir(path):    
-        if files.endswith("WILD_22112016_REDIMENSIONADA__0_100_6_4x4_5x8_15x15__concatenado.txt"):
+
+    for files in os.listdir(path):
+        if files.endswith(".txt"):
             X1, y1 = load_svmlight_file(path + files)
             X1 = X1.toarray()
             featuresFull = None
-            print 'carregando arquivo: ' + files
-            print X1.shape[1]
+            print ('carregando arquivo: ' + files)
+            #print (X1.shape[1])
             #numSplit = 4
             sizeSplit = X1.shape[1] / numSplit
             sizeSplit=floor(sizeSplit)
             xFeatures = np.array([])
             for g in range(numSplit):
                 #print ("[%d, %d[" % (sizeSplit * g, sizeSplit*(g+1)))
-             
+
                 #y = y1[0:y1.shape[0],(sizeSplit * g):sizeSplit*(g+1)]
                 y = y1
                 X = X1[0:y1.shape[0],(sizeSplit * g):sizeSplit*(g+1)]
-            
+
                 #print X1.shape
-                
+
                 # Build a forest and compute the feature importances
                 forest = RandomForestClassifier(n_estimators=250, random_state=0, n_jobs=3)
-                
+
                 forest.fit(X, y)
                 importances = forest.feature_importances_
                 std = np.std([tree.feature_importances_ for tree in forest.estimators_],
                              axis=0)
                 indices = np.argsort(importances)[::-1]
-                
+
                 # Print the feature ranking
                 #print("Feature ranking:")
                 #writer= open("/media/eucassio/dados/facedatabase/vetores_extras/wild_recortada_manualmente/features_1000.csv", 'a')
@@ -108,13 +107,13 @@ def selecao(numFeatures, numSplit):
                 for f in range(X.shape[1]):
                     if(f < numFeatures):
                         indicesFeatures.append(indices[f])
-                        #print("%d. feature %d (%f)" % (f + 1, indices[f], importances[indices[f]]))                        
+                        #print("%d. feature %d (%f)" % (f + 1, indices[f], importances[indices[f]]))
                         #writer.write(str(indices[f]) + ";" + str(importances[indices[f]]) +"\n")
                 #writer.close()
-                
+
                 xFeatures = X[:,indicesFeatures]
                 #print xFeatures.shape
-         
+
                 #if(xFeatures.shape[0] == 0 ):
                 #   xFeatures =  xFeaturesTmp
                 #else:
@@ -122,16 +121,17 @@ def selecao(numFeatures, numSplit):
                 #print(xFeatures.shape)
                 #if(featuresFull != None):
                 #    print featuresFull.shape
-                #print "----------------"  
-                if(featuresFull == None): 
+                #print "----------------"
+                #print(featuresFull)
+                if(featuresFull is None):
                     featuresFull = xFeatures
                 else:
                     featuresFull = np.hstack((featuresFull,xFeatures))
                     #np.concatenate((featuresFull,xFeatures),axis=1)
                     #featuresFull.append(xFeatures,axis=1)
-        
-                #print(featuresFull.shape) 
-                         
+
+                #print(featuresFull.shape)
+
             #print(featuresFull.shape)
             classificar(files, featuresFull, y1, f)
             dump_svmlight_file(featuresFull, y, path + files[:-4] +"_" + str(g) +"_" + str(numFeatures*numSplit) + "_sub_"+ str(numFeatures) + "x" + str(numSplit) + "_forest.txt")
@@ -145,4 +145,4 @@ def selecao(numFeatures, numSplit):
             #plt.show()
 
 #selecao(250,14)
-selecao(3800,1)
+selecao(100,28)
