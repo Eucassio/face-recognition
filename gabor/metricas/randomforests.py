@@ -21,6 +21,10 @@ from sklearn.metrics import recall_score
 
 import matplotlib.pyplot as plt
 import numpy as np
+import time
+import datetime
+
+
 
 X1 =0
 path = "/opt/face-recognition/Results/featuresvector/concatenated/"
@@ -76,6 +80,10 @@ def selecao(numFeatures, numSplit):
             X1 = X1.toarray()
             featuresFull = None
             print ('carregando arquivo: ' + files)
+            t1 = time.time()
+            n1 = datetime.datetime.now()
+            print(str(n1))
+
             #print (X1.shape[1])
             #numSplit = 4
             sizeSplit = X1.shape[1] / numSplit
@@ -133,7 +141,16 @@ def selecao(numFeatures, numSplit):
                 #print(featuresFull.shape)
 
             #print(featuresFull.shape)
+            t2 = time.time()
+            print ("Time t1: ", t2 - t1)
+            n2 = datetime.datetime.now()
+            print(str(n2))
+
             classificar(files, featuresFull, y1, f)
+            t3 = time.time()
+            print ("Time t2: ", t3 - t2)
+            n3 = datetime.datetime.now()
+            print(str(n3))
             dump_svmlight_file(featuresFull, y, path + files[:-4] +"_" + str(g) +"_" + str(numFeatures*numSplit) + "_sub_"+ str(numFeatures) + "x" + str(numSplit) + "_forest.txt")
             # Plot the feature importances of the forest
             #plt.figure()
@@ -143,6 +160,7 @@ def selecao(numFeatures, numSplit):
             #plt.xticks(range(xFeatures.shape[1]), indices)
             #plt.xlim([-1, xFeatures.shape[1]])
             #plt.show()
+
 
 #selecao(250,14)
 selecao(100,28)
